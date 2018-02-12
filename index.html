@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Weather App</title>
+    <!-- Just for basic styling. -->
+ 
+   <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel" >
+      class TempratureIndicator extends React.Component{
+          constructor(props)
+          {
+              super(props);
+          }
+         /* componentWillReceiveProps(nextProps){
+
+              const currentCity = nextProps.currentCity;
+              const currentUnit = nextProps.currentUnit;
+              console.log(currentCity+" "+currentUnit);
+             /* let apis = {
+                   currentWeather: { //get user selected recomendation weather
+                       api:"http://api.openweathermap.org/data/2.5/weather?",
+                       parameters: `q=${this.currentCity}&APPID=dab2af346204dc3bf2f1976433aacad6&cnt=1&units=${this.currentUnit}`,
+                       url: () => {
+                           return apis.currentWeather.api + apis.currentWeather.parameters
+                       }
+                   }
+               };
+              let url = `http://api.openweathermap.org/data/2.5/weather?q=${currentCity}&APPID=dab2af346204dc3bf2f1976433aacad6&cnt=1&units=${currentUnit}`;
+              let result ={};
+              console.log(url);
+              fetch(url, {
+                  method: 'GET'
+              })
+                  .then((response)=> {return response.json()})
+                  .then((responseJson) =>{
+                      // console.log(result);
+                      // console.log(responseJson);
+                      this.result = responseJson;
+                      console.log(this.result.main.temp);
+                      nextProps.setTemprature(this.result.main.temp);
+
+                  });
+          }*/
+         getTemp()
+         {
+
+             const currentCity = this.props.currentCity;
+             const currentUnit = this.props.currentUnit;
+             console.log(currentCity+" "+currentUnit);
+      /* let apis = {
+            currentWeather: { //get user selected recomendation weather
+                api:"http://api.openweathermap.org/data/2.5/weather?",
+                parameters: `q=${this.currentCity}&APPID=dab2af346204dc3bf2f1976433aacad6&cnt=1&units=${this.currentUnit}`,
+                url: () => {
+                    return apis.currentWeather.api + apis.currentWeather.parameters
+                }
+            }
+        };*/
+       let url = `http://api.openweathermap.org/data/2.5/weather?q=${currentCity}&APPID=dab2af346204dc3bf2f1976433aacad6&cnt=1&units=${currentUnit}`;
+       let result ={};
+       console.log(url);
+       fetch(url, {
+           method: 'GET'
+       })
+           .then((response)=> {return response.json()})
+           .then((responseJson) =>{
+               // console.log(result);
+               // console.log(responseJson);
+               this.result = responseJson;
+               console.log(this.result.main.temp);
+               this.props.setTemprature(this.result.main.temp);
+
+           });
+
+  }
+   shouldComponentUpdate(nextProps, nextState){
+       function shallowEqual(objA, objB) {
+           if (objA === objB) {
+               return true;
+           }
+
+           if (typeof objA !== 'object' || objA === null ||
+               typeof objB !== 'object' || objB === null) {
+               return false;
+           }
+
+           var keysA = Object.keys(objA);
+           var keysB = Object.keys(objB);
+
+           if (keysA.length !== keysB.length) {
+               return false;
+           }
+
+           // Test for A's keys different from B.
+           var bHasOwnProperty = hasOwnProperty.bind(objB);
+           for (var i = 0; i < keysA.length; i++) {
+               if (!bHasOwnProperty(keysA[i]) || objA[keysA[i]] !== objB[keysA[i]]) {
+                   return false;
+               }
+           }
+
+           return true;
+       }
+
+       function shallowCompare(instance, nextProps, nextState) {
+           return (
+               !shallowEqual(instance.props, nextProps) ||
+               !shallowEqual(instance.state, nextState)
+           );
+       }
+       return shallowCompare(this, nextProps, nextState);
+   }
+
+
+
+
+
+   render(){
+             this.getTemp();
+       console.log("ERERER");
+       console.log(this.props);
+       console.log("PPPPP "+this.props.currentTemperature);
+       const returnElement =<div>
+           {this.props.currentTemperature}
+         </div>;
+       console.log(returnElement);
+       return returnElement;
+   }
+}
+class UnitSelector extends React.Component{
+     constructor(props)
+   {
+       super(props);
+       this.state={
+           units:[{name:"Kelvin",value:""},{name:"Fahrenheitn",value:"imperial"},{name:"Celsius",value:"metric"}]
+       }
+                     this.onChangeHandler = this.onChangeHandler.bind(this);
+
+   }
+     onChangeHandler(event){
+      this.props.setUnit(event.target.value);
+  }
+   render(){
+       const allItems = this.state.units.map(item=>{return <option key={item.name} value={item.value}>{item.name}</option>});
+
+       return <select value={this.props.currentUnit} onChange={this.onChangeHandler}>
+           {allItems}
+ </select>
+         ;
+   }
+}
+class CitySelector extends React.Component{
+     constructor(props)
+   {
+       super(props);
+       this.state={
+           cities:[[1, 'Kolhapur', 'Maharashtra'],
+[2, 'Port Blair', 'Andaman & Nicobar Islands'],
+[3, 'Adilabad', 'Andhra Pradesh'],
+[4, 'Adoni', 'Andhra Pradesh'],
+[5, 'Amadalavalasa', 'Andhra Pradesh'],
+[6, 'Amalapuram', 'Andhra Pradesh'],
+[7, 'Anakapalle', 'Andhra Pradesh'],
+[8, 'Anantapur', 'Andhra Pradesh'],
+[9, 'Badepalle', 'Andhra Pradesh'],
+[10, 'Banganapalle', 'Andhra Pradesh'],
+[11, 'Bapatla', 'Andhra Pradesh'],
+[12, 'Bellampalle', 'Andhra Pradesh'],
+[13, 'Bethamcherla', 'Andhra Pradesh'],
+[14, 'Bhadrachalam', 'Andhra Pradesh'],
+[15, 'Bhainsa', 'Andhra Pradesh'],
+[16, 'Bheemunipatnam', 'Andhra Pradesh'],
+[17, 'Bhimavaram', 'Andhra Pradesh'],
+[18, 'Bhongir', 'Andhra Pradesh'],
+[19, 'Bobbili', 'Andhra Pradesh'],
+[20, 'Bodhan', 'Andhra Pradesh']],
+       };
+       this.onChangeHandler = this.onChangeHandler.bind(this);
+
+   }
+
+  onChangeHandler(event){
+      this.props.setCity(event.target.value);
+
+  }
+   render(){
+       const allItems = this.state.cities.map(item=>{return <option key={item[0]} value={item[1]}>{item[1]}</option>});
+
+       return <select value={this.props.currentCity} onChange={this.onChangeHandler}>
+           {allItems}
+         </select>;
+   }
+}
+class App extends React.Component{
+     constructor(props)
+   {
+       super(props);
+       this.state={
+           currentTemprature:0,
+           currentCity:"Kolhapur",
+           currentUnit:"",
+       };
+       this.setCity = this.setCity.bind(this);
+       this.setUnit = this.setUnit.bind(this);
+       this.setTemprature = this.setTemprature.bind(this);
+   }
+    setCity(city){
+     this.setState({currentCity:city});
+        console.log(this.state);
+    }
+setUnit(unit){
+     this.setState({currentUnit:unit});
+        console.log(this.state);
+    }
+    setTemprature(temprature){
+        this.setState({currentTemprature:temprature});
+    }
+   render(){
+       return <div>
+           <TempratureIndicator  currentCity = {this.state.currentCity} currentUnit = {this.state.currentUnit}
+                                 currentTemperature = {this.state.currentTemprature}  setTemprature={this.setTemprature}/>
+           <CitySelector currentCity = {this.state.currentCity} setCity={this.setCity}   />
+           <UnitSelector currentUnit = {this.state.currentUnit} setUnit={this.setUnit}   />
+         </div>;
+   }
+}
+
+ReactDOM.render(<App/>,document.getElementById("root"));
+</script>
+  </body>
+</html>
