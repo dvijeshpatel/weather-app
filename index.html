@@ -20,9 +20,12 @@
     class TempratureIndicator extends React.PureComponent{
         constructor(props) {
             super(props);
-            this.state={currentTemprature:""}
+            this.state={currentTemprature:"",
+                        city:"",
+                        }
             //this.getTemp(props);
-
+             this.timerRequestArray=[];
+             this.timer=undefined;
         }
         getTemp(nextProps) {
             const currentCity = nextProps.currentCity;
@@ -32,26 +35,35 @@
             let url = `http://api.openweathermap.org/data/2.5/weather?q=${currentCity}&APPID=dab2af346204dc3bf2f1976433aacad6&cnt=1&units=${currentUnit}`;
             let result = {};
             console.log(url);
-            let time = 10*Math.random()*1000;
+            let time = 5*Math.random()*1000;
             time = parseInt(time);
             console.log("time",time);
-            setTimeout(function () {
+            let timer;
+            console.log("request",this.timer);
+            clearTimeout(this.timer);
+            this.timer = setTimeout(()=>{
                 fetch(url, {
                     method: 'GET'
                 })
                     .then((response) => {
-
-                        return response.json()
+                      /*  this.timerRequestArray.forEach((request)=>{
+                            clearTimeout(request);
+                        });*/
+                        //console.log(response.json());
+                        return response.json();
                     })
                     .then((responseJson) => {
                         this.result = responseJson;
                         console.log(this.result);
-                        this.setState({currentTemprature:this.result.main.temp});
+                        this.setState({currentTemprature:this.result.main.temp,city:this.result.name});
+
                     }).catch((reason) => {
                     console.log(' Fetching error: ' +reason);
                 })
 
-            }.bind(this),time);
+            },time);
+            console.log("timer ",this.timer);
+           // this.timerRequestArray.push(request);
             /*fetch(url, {
                 method: 'GET'
             })
@@ -81,7 +93,8 @@
         render() {
             console.log("Inside Render");
             const returnElement = <div>
-                {this.state.currentTemprature}
+                <div>{this.state.city}</div>
+                <div>{this.state.currentTemprature}</div>
             </div>;
             return returnElement;
         }
